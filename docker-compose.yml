@@ -9,6 +9,7 @@ services:
     tty: true
     volumes:
       - ./:/var/www/html/chat/
+      - ./.docker/config/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
     expose:
       - "9000"
     networks:

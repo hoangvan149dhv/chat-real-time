@@ -7,7 +7,7 @@
                     <span class="online_icon"></span>
                 </div>
                 <div class="user_info">
-                    <span>{{ Name }} ❤️💕😘</span>
+                    <span>{{ userSend.user.name }} ❤️💕😘</span>
                     <p>1767 Messages</p>
                 </div>
                 <div class="video_cam">
@@ -72,24 +72,21 @@ export default {
             type: Object,
             default: () => {}
         },
-    },
-    computed : {
-        Name () {
-            if (this.currentUser.id == 1) {
-                return 'Crush';
-            }
-            return 'Hoàng Văn';
+        userSend: {
+            type: Object,
+            default: () => {}
         }
     },
     data() {
         console.error(this.currentUser)
+        console.error(this.userSend)
         return {
             contents : this.msg,
             sms : {
                 user_id : this.currentUser.id,
                 message : '',
                 full_name : this.currentUser.name,
-                channel_id : 1,
+                channel_id : this.currentUser.channel.channel_id,
             },
 
         }

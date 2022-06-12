@@ -17,3 +17,5 @@ yarn-error.log
 !.docker/bin
 !.docker/php
 !.docker/config
+websocket.log
+chat-worker.log

@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y \
     jpegoptim optipng pngquant gifsicle \
     vim \
     unzip \
-    # git \
     curl \
-    libzip-dev
+    libzip-dev \
+    supervisor
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -35,7 +35,11 @@ RUN apt-get install -y nodejs
 RUN groupadd -g 1000 van
 RUN useradd -u 1000 -ms /bin/bash -g van van
 
-# Change listen  127.0.0.1:9000 -> 9000
-RUN sed -i "s|;*listen\s*=\s*127.0.0.1:9000|listen = 9000|g" /usr/local/etc/php-fpm.d/www.conf
+# Congigure supervisor
+COPY chat-supervisord.conf /etc/supervisor/conf.d/chat-supervisord.conf
+# Set permissions for supervisor
+RUN chown -R van /run/ /var/log/supervisor/ /var/run/
 
 USER van
+
+CMD php-fpm & /usr/bin/supervisord

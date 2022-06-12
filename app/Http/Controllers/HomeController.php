@@ -15,8 +15,10 @@ class HomeController extends Controller
     public function index()
     {
         $messages = $this->user->chat;
-        $currentUser = $this->user;
+        $currentUser = $this->user->load('channel');
+        $userTwo = $currentUser->channel->where('channel_id', $currentUser->channel->channel_id)
+            ->whereNotIn('user_id', [$currentUser->id])->with('user')->first();
 
-        return view('home', compact('messages','currentUser'));
+        return view('home', compact('messages', 'currentUser', 'userTwo'));
     }
 }

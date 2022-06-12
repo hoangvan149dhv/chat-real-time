@@ -40,5 +40,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Chat::class, 'channels', null, 'channel_id',null,'channel_id');
     }
 
-
+    public function channel() {
+        return $this->hasOne(Channels::class, 'user_id', 'id');
+    }
 }

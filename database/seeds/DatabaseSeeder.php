@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -9,8 +9,29 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        // Open a try/catch block
+        try {
+            // Begin a transaction
+            DB::beginTransaction();
+
+            $this->call([
+                UserSeeder::class,
+                ChannelsSeeder::class,
+            ]);
+
+            // Commit the transaction
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            throw $e;
+        }
     }
 }
