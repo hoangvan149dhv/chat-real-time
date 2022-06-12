@@ -1,0 +1,68 @@
+version: '3'
+services:
+  #App Service
+  app:
+    build:
+      context: .
+    container_name: app_chat
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./:/var/www/html/chat/
+    expose:
+      - "9000"
+    networks:
+      - app-network
+    ports:
+      - "6001:6001"
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver_chat
+    volumes:
+      - ./:/var/www/html/chat/
+      - ./.docker/config/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/nginx:/var/log/nginx/
+    depends_on:
+      - app
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+  # MySQL Service
+  mysql:
+    image: mariadb:10.5
+    container_name: mysql_chat
+    restart: unless-stopped
+    command: mysqld --sql_mode="" --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    tty: true
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.docker/data/mysql:/var/lib/mysql
+    user: root
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - app-network
+
+  #PHP Myadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.1.1
+    container_name: 'phpmyadmin_chat'
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 100M
+    ports:
+      - '8080:80'
+    networks:
+      - app-network
+
+##Docker Networks
+networks:
+  app-network:
+    driver: bridge
