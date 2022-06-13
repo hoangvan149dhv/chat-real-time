@@ -19,3 +19,5 @@ yarn-error.log
 !.docker/config
 websocket.log
 chat-worker.log
+package-lock.json
+composer.lock
