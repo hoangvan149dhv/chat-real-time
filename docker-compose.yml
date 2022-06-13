@@ -10,12 +10,15 @@ services:
     volumes:
       - ./:/var/www/html/chat/
       - ./.docker/config/php/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/php.ini
     expose:
       - "9000"
     networks:
       - app-network
     ports:
       - "6001:6001"
+    depends_on:
+      - mysql
   #Nginx Service
   webserver:
     image: nginx:alpine
@@ -45,6 +48,7 @@ services:
       - ./.docker/data/mysql:/var/lib/mysql
     user: root
     environment:
+      MYSQL_DATABASE: chat
       MYSQL_ROOT_PASSWORD: root
     networks:
       - app-network

@@ -1,4 +1,5 @@
 FROM php:7.4-fpm
+COPY . /var/www/html/chat/
 # Set working directory
 WORKDIR /var/www/html/chat
 
@@ -42,4 +43,4 @@ RUN chown -R van /run/ /var/log/supervisor/ /var/run/
 
 USER van
 
-CMD php-fpm & /usr/bin/supervisord
+CMD ./start.sh
